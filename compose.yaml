@@ -1,0 +1,37 @@
+# Two containers:
+#   app   - the Vanish Python app (image vanish-app:1.0, built from ./Dockerfile), data in the "notes" volume
+#   caddy - public web server on ports 80/443; gets a free HTTPS certificate and forwards to app
+#
+# Build on a Mac/laptop:  bash scripts/build-for-ec2.sh   (saves both images to dist/vanish-images.tar.gz)
+# On EC2:                 bash deploy/deploy.sh           (loads that file, writes .env, starts both)
+# Quick local run:        docker compose up app           (then open http://localhost:8000)
+
+services:
+  app:
+    image: vanish-app:1.0
+    build: .
+    restart: unless-stopped
+    volumes:
+      - notes:/data
+    ports:
+      - "127.0.0.1:8000:8000" # localhost only: never reachable from the internet
+
+  caddy:
+    image: caddy:2.11
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data # certificates live here, so restarts don't request new ones
+      - caddy_config:/config
+
+volumes:
+  notes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,276 @@
+/* Vanish — "condensation on glass": cool fog, one grotesque, one dissolve moment. */
+
+:root {
+  --fog: #dde6eb;
+  --glass: #f4f7f9;
+  --ink: #14202a;
+  --mist: #5a6c78;
+  --line: #c2ced5;
+  --cobalt: #2445d6;
+  --cobalt-ink: #ffffff;
+  --ember: #b23a12;
+  --ok: #1f6f4a;
+  --radius-sheet: 18px;
+  --radius-control: 10px;
+  --font: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fog: #0f171d;
+    --glass: #17222a;
+    --ink: #e5edf1;
+    --mist: #93a5b0;
+    --line: #2b3a44;
+    --cobalt: #8098ff;
+    --cobalt-ink: #0f171d;
+    --ember: #ff8f63;
+    --ok: #6fd3a2;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--fog);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  /* faint condensation: two soft radial fogs, no gradient "wash" on content */
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, color-mix(in srgb, var(--glass) 70%, transparent), transparent 70%),
+    radial-gradient(40rem 24rem at -10% 110%, color-mix(in srgb, var(--glass) 45%, transparent), transparent 70%);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+/* ------------------------------------------------ wordmark: the letters evaporate to the right */
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 56px;
+}
+.wordmark {
+  font-size: 26px;
+  font-weight: 700;
+  font-stretch: 80%;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--ink) 35%, color-mix(in srgb, var(--ink) 8%, transparent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 4px;
+}
+.top a.quiet { color: var(--mist); font-size: 15px; text-decoration: none; }
+.top a.quiet:hover { color: var(--ink); text-decoration: underline; }
+
+/* ------------------------------------------------ type */
+h1 {
+  font-size: clamp(34px, 7vw, 48px);
+  line-height: 1.05;
+  font-weight: 650;
+  font-stretch: 85%;
+  letter-spacing: -0.025em;
+  margin: 0 0 16px;
+  max-width: 14ch;
+}
+h2 {
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 650;
+  font-stretch: 85%;
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
+}
+.lede { color: var(--mist); max-width: 52ch; margin: 0 0 32px; }
+p { margin: 0 0 12px; }
+.small { font-size: 14px; color: var(--mist); }
+
+/* ------------------------------------------------ the sheet (one surface, not a card grid) */
+.sheet {
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sheet);
+  padding: 20px;
+}
+
+.note-field { position: relative; }
+textarea, .note-out {
+  display: block;
+  width: 100%;
+  min-height: 190px;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 18px;
+  line-height: 1.6;
+  padding: 0;
+}
+textarea::placeholder { color: color-mix(in srgb, var(--mist) 75%, transparent); }
+.note-out {
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 0;
+  margin: 0;
+}
+
+.count { text-align: right; font-size: 13px; color: var(--mist); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.count.over { color: var(--ember); }
+
+/* ------------------------------------------------ the sentence-shaped options */
+.rule {
+  margin: 20px 0 0;
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
+  font-size: 18px;
+  line-height: 2.1;
+}
+.rule select {
+  font: inherit;
+  font-weight: 600;
+  color: var(--cobalt);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid color-mix(in srgb, var(--cobalt) 45%, transparent);
+  border-radius: 0;
+  padding: 0 2px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  field-sizing: content; /* shrink to the chosen option (Chrome/Edge); others fall back gracefully */
+}
+.rule select option { color: var(--ink); background: var(--glass); font-weight: 400; }
+.rule select:hover { border-bottom-color: var(--cobalt); }
+
+.extras { margin-top: 18px; display: grid; gap: 12px; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 16px; cursor: pointer; }
+.check input { margin-top: 5px; width: 17px; height: 17px; accent-color: var(--cobalt); flex: none; }
+.reveal-field { margin: 2px 0 0 27px; display: grid; gap: 4px; }
+.reveal-field[hidden] { display: none; }
+
+input[type="email"], input[type="password"], input[type="text"].plain, .link-box input {
+  font: inherit;
+  font-size: 16px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--fog);
+  color: var(--ink);
+}
+.sheet:has(textarea:focus-visible) { border-color: color-mix(in srgb, var(--cobalt) 60%, transparent); }
+textarea:focus-visible { outline: none; }
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--cobalt) 55%, transparent);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------ buttons */
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; align-items: center; }
+button, .button {
+  font: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 999px;
+  padding: 12px 22px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.primary { background: var(--cobalt); color: var(--cobalt-ink); }
+.primary:hover { filter: brightness(1.08); }
+.primary[disabled] { opacity: .55; cursor: progress; }
+.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+.secondary:hover { border-color: var(--ink); }
+.danger { background: transparent; color: var(--ember); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.danger:hover { border-color: var(--ember); }
+
+.error { color: var(--ember); font-size: 15px; margin-top: 14px; }
+.error:empty { display: none; }
+
+/* ------------------------------------------------ result */
+.link-box { display: flex; gap: 8px; margin: 18px 0 6px; }
+.link-box input { font-size: 15px; background: var(--fog); }
+.link-box button { flex: none; }
+
+.result-grid { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; margin-top: 18px; }
+.qr { width: 132px; height: 132px; border-radius: 10px; background: #fff; padding: 6px; border: 1px solid var(--line); }
+.qr svg { width: 100%; height: 100%; display: block; }
+.facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.facts li { color: var(--mist); }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* ------------------------------------------------ view page */
+.status-line { color: var(--mist); margin: 0 0 28px; max-width: 52ch; font-variant-numeric: tabular-nums; }
+.status-line strong { color: var(--ink); font-weight: 600; }
+.warn { color: var(--ember); }
+.done { color: var(--ok); }
+
+/* ------------------------------------------------ the one memorable moment: text dissolves */
+.dissolve {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-size: 18px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: hidden;
+  color: var(--ink);
+}
+.dissolve span {
+  display: inline;
+  animation: evaporate 900ms cubic-bezier(.4, 0, .6, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes evaporate {
+  0%   { opacity: 1; filter: blur(0); }
+  100% { opacity: 0; filter: blur(7px); transform: translateY(-6px); }
+}
+.is-dissolving textarea { color: transparent; caret-color: transparent; }
+
+.appear { animation: appear 420ms ease-out both; }
+@keyframes appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dissolve span, .appear { animation: none !important; }
+}
+
+footer.foot { margin-top: 48px; font-size: 14px; color: var(--mist); }
+footer.foot a { color: var(--mist); }
+
+.prose h2 { margin-top: 32px; }
+.prose p, .prose li { max-width: 62ch; }
+.prose ul { padding-left: 20px; }
+.prose code { font-size: 15px; background: var(--glass); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+
+@media (max-width: 520px) {
+  .top { margin-bottom: 36px; }
+  .sheet { padding: 16px; }
+  .result-grid { grid-template-columns: 1fr; }
+  .qr { width: 160px; height: 160px; }
+  .link-box { flex-direction: column; }
+}

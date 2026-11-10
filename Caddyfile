@@ -1,0 +1,22 @@
+# Caddy serves Vanish over HTTPS and forwards every request to the app container.
+#
+# SITE_ADDRESS is the EC2 instance's public IP (set by deploy/deploy.sh) or a domain name.
+# Let's Encrypt issues free 6-day certificates for public IP addresses with the "shortlived"
+# profile; Caddy renews them automatically. Browsers need HTTPS for the in-browser encryption.
+{
+	# Browsers send no server name when you browse to a bare IP, so tell Caddy which
+	# certificate to present in that case.
+	default_sni {$SITE_ADDRESS}
+}
+
+{$SITE_ADDRESS} {
+	tls {
+		issuer acme {
+			profile shortlived
+		}
+	}
+
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=31536000"
+	reverse_proxy app:8000
+}

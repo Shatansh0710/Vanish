@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Vanish</title>
+  <meta name="description" content="Share a secret that deletes itself. Encrypted in your browser, destroyed after reading.">
+  <link rel="icon" href="/static/favicon.svg?v={{v}}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..700&display=swap">
+  <link rel="stylesheet" href="/static/style.css?v={{v}}">
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <a class="wordmark" href="/">vanish</a>
+      <a class="quiet" href="/about">How it works</a>
+    </header>
+
+    <section id="compose">
+      <h1>Share a secret that deletes itself.</h1>
+      <p class="lede">Your note is encrypted in this browser before it's sent. The link holds the only key, so not even the server can read it.</p>
+
+      <form id="form" class="sheet" novalidate>
+        <div class="note-field" id="noteField">
+          <textarea id="note" name="note" maxlength="4000" required autofocus aria-label="Your secret note"
+            placeholder="Paste a password, an API key, or anything you'd rather not leave sitting in a chat history."></textarea>
+        </div>
+        <div class="count" id="count">0 / 4,000</div>
+
+        <p class="rule">
+          Destroy it after
+          <select id="views" aria-label="Number of views">
+            <option value="1" selected>1 view</option>
+            <option value="2">2 views</option>
+            <option value="3">3 views</option>
+            <option value="5">5 views</option>
+            <option value="10">10 views</option>
+          </select>
+          or
+          <select id="ttl" aria-label="Time limit">
+            <option value="300">5 minutes</option>
+            <option value="3600" selected>1 hour</option>
+            <option value="86400">1 day</option>
+            <option value="604800">7 days</option>
+          </select>,
+          whichever comes first.
+        </p>
+
+        <div class="extras">
+          <label class="check"><input type="checkbox" id="wantPass"> Also require a passphrase</label>
+          <div class="reveal-field" id="passField" hidden>
+            <input type="password" id="pass" autocomplete="new-password" placeholder="Passphrase" aria-label="Passphrase">
+            <span class="small">Send the passphrase separately from the link, for example by phone.</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary" id="create">Create secret link</button>
+        </div>
+        <p class="error" id="error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="result" hidden>
+      <h1>Your link is ready.</h1>
+      <p class="lede">Copy it now. This page is the only place it exists, and it won't be shown again.</p>
+
+      <div class="sheet">
+        <div class="link-box">
+          <input type="text" id="link" readonly aria-label="Secret link">
+          <button type="button" class="primary" id="copy">Copy link</button>
+        </div>
+        <div class="result-grid">
+          <ul class="facts">
+            <li id="factViews"></li>
+            <li id="factExpiry"></li>
+            <li id="factPass" hidden><strong>Passphrase required</strong> to read it.</li>
+          </ul>
+          <div class="qr" id="qr" aria-label="QR code for the link"></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="danger" id="destroy">Destroy now</button>
+          <button type="button" class="secondary" id="again">Write another</button>
+        </div>
+        <p class="error" id="resultError" role="alert"></p>
+      </div>
+    </section>
+
+    <footer class="foot">Runs in Docker on Amazon EC2. <a href="/about">Security details</a></footer>
+  </main>
+  <script src="/static/vendor/qrcode.js?v={{v}}"></script>
+  <script src="/static/crypto.js?v={{v}}"></script>
+  <script src="/static/app.js?v={{v}}"></script>
+</body>
+</html>

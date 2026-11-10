@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>A secret for you</title>
+  <link rel="icon" href="/static/favicon.svg?v={{v}}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..700&display=swap">
+  <link rel="stylesheet" href="/static/style.css?v={{v}}">
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <a class="wordmark" href="/">vanish</a>
+      <a class="quiet" href="/about">How it works</a>
+    </header>
+
+    <section id="loading">
+      <p class="status-line">Checking the note…</p>
+    </section>
+
+    <section id="ready" hidden>
+      <h1>Someone sent you a secret.</h1>
+      <p class="status-line" id="readyStatus"></p>
+      <div class="actions">
+        <button type="button" class="primary" id="open">Open note</button>
+      </div>
+      <p class="error" id="openError" role="alert"></p>
+    </section>
+
+    <section id="locked" hidden>
+      <h1>This note needs a passphrase.</h1>
+      <p class="status-line">The sender should have given it to you separately. You can try as many times as you need, but keep this tab open: the note has already been downloaded and won't load again.</p>
+      <form class="sheet" id="unlockForm" novalidate>
+        <input type="password" id="pass" autocomplete="off" placeholder="Passphrase" aria-label="Passphrase" required>
+        <div class="actions"><button type="submit" class="primary" id="unlock">Unlock note</button></div>
+        <p class="error" id="unlockError" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="shown" hidden>
+      <h1>Here's your note.</h1>
+      <p class="status-line" id="shownStatus"></p>
+      <div class="sheet">
+        <pre class="note-out" id="out"></pre>
+      </div>
+      <div class="actions">
+        <button type="button" class="primary" id="copyText">Copy text</button>
+        <a class="button secondary" href="/">Write your own</a>
+      </div>
+    </section>
+
+    <section id="gone" hidden>
+      <h1>This note has vanished.</h1>
+      <p class="status-line">It was already read, it expired, or the link is wrong. Ask the sender for a new link.</p>
+      <div class="actions"><a class="button primary" href="/">Write your own note</a></div>
+    </section>
+
+    <section id="broken" hidden>
+      <h1>This link is missing its key.</h1>
+      <p class="status-line">Part of the link after the # was cut off, so the note can't be decrypted. Nothing was opened. Ask the sender to copy the full link again.</p>
+      <div class="actions"><a class="button secondary" href="/">Go to Vanish</a></div>
+    </section>
+
+    <footer class="foot">The note is decrypted in your browser. The server never sees its contents. <a href="/about">How it works</a></footer>
+  </main>
+  <script src="/static/crypto.js?v={{v}}"></script>
+  <script src="/static/view.js?v={{v}}"></script>
+</body>
+</html>

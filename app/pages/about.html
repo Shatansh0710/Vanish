@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>How Vanish works</title>
+  <link rel="icon" href="/static/favicon.svg?v={{v}}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..700&display=swap">
+  <link rel="stylesheet" href="/static/style.css?v={{v}}">
+</head>
+<body>
+  <main class="wrap prose">
+    <header class="top">
+      <a class="wordmark" href="/">vanish</a>
+      <a class="quiet" href="/">Write a note</a>
+    </header>
+
+    <h1>How Vanish works.</h1>
+    <p class="lede">Vanish lets you send a password or private message as a link that stops working after it's read, or after a time limit, whichever comes first.</p>
+
+    <h2>Your note is encrypted before it leaves your browser</h2>
+    <p>When you press <em>Create secret link</em>, your browser generates a random 256-bit key and encrypts the note with AES-GCM. Only the encrypted bytes are sent to the server.</p>
+    <p>The key is placed after the <code>#</code> in the link. Browsers never send that part of a URL to any server, so the key stays between you and the person you share the link with.</p>
+
+    <h2>Passphrases add a second lock</h2>
+    <p>If you add a passphrase, the note is encrypted twice: first with a key derived from the passphrase, then with the link key. Someone who intercepts the link still can't read the note without the passphrase.</p>
+
+    <h2>Notes destroy themselves</h2>
+    <ul>
+      <li>Each time the note is opened, the view count goes up in a single atomic database update. Two people can't both get the last view.</li>
+      <li>On the final view, the encrypted note is deleted immediately.</li>
+      <li>Unread notes are deleted automatically when their time runs out.</li>
+      <li>Link previews in chat apps can't use up a view, because opening a note needs a button press, not just a page load.</li>
+    </ul>
+
+    <h2>What the server can see</h2>
+    <p>When a note was created, when it expires and how many views it allows. It can't see what the note says.</p>
+
+    <h2>Built on Amazon EC2</h2>
+    <p>Vanish runs as two Docker containers on one Amazon EC2 server: a small Python app that stores encrypted notes in SQLite, and Caddy, which serves it over HTTPS. Expired notes are deleted every minute.</p>
+  </main>
+</body>
+</html>
